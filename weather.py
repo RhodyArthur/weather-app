@@ -96,5 +96,54 @@ class WeatherApp:
         """
         Format and display weather data nicely
         Include emoji for weather conditions (☀️ ☁️ 🌧️ ⛈️ ❄️)
+        Accepts either a dict (single weather) or list (forecast summaries)
         """
-        pass
+        def get_emoji(description):
+            desc = description.lower()
+            if 'clear' in desc:
+                return '☀️'
+            elif 'cloud' in desc:
+                return '☁️'
+            elif 'rain' in desc or 'drizzle' in desc:
+                return '🌧️'
+            elif 'thunder' in desc:
+                return '⛈️'
+            elif 'snow' in desc:
+                return '❄️'
+            else:
+                return ''
+
+        if isinstance(weather_data, dict):
+            temp = weather_data.get('temperature')
+            desc = weather_data.get('description') or weather_data.get('main') or ''
+            humidity = weather_data.get('humidity')
+            wind = weather_data.get('wind')
+            print("Weather:", desc, get_emoji(desc))
+            if temp is not None:
+                print(f"Temperature: {temp}°C")
+            if humidity is not None:
+                print(f"Humidity: {humidity}%")
+            if wind is not None:
+                print(f"Wind Speed: {wind} m/s")
+            if 'description' in weather_data:
+                print(f"Description: {weather_data['description']}")
+        elif isinstance(weather_data, list):
+            for day in weather_data:
+                date = day.get('date', '')
+                temp = day.get('avg_temp')
+                desc = day.get('description', '')
+                humidity = day.get('avg_humidity')
+                wind = day.get('avg_wind')
+                print(f"Date: {date}")
+                print(f"  Weather: {desc} {get_emoji(desc)}")
+                if temp is not None:
+                    print(f"  Avg Temp: {temp:.1f}°C")
+                if humidity is not None:
+                    print(f"  Avg Humidity: {humidity:.0f}%")
+                if wind is not None:
+                    print(f"  Avg Wind: {wind:.1f} m/s")
+                print()
+        else:
+            raise ValueError('weather_data must be a dict or a list of dicts')
+            
+        
