@@ -24,8 +24,8 @@ class WeatherApp:
                 self.headers['Authorization'] = f"Bearer {token}"
             self.session.headers.update(self.headers)
         except Exception as e:
-            print(e)
-            return None
+            raise RuntimeError("Failed to initialize WeatherApp") from e
+
     
     def get_current_weather(self, city):
         """
@@ -137,7 +137,7 @@ class WeatherApp:
                 print(f"Date: {date}")
                 print(f"  Weather: {desc} {get_emoji(desc)}")
                 if temp is not None:
-                    print(f"  Avg Temp: {temp:.1f}°C")
+                    print(f"  Avg Temp: {temp:.1f}K")
                 if humidity is not None:
                     print(f"  Avg Humidity: {humidity:.0f}%")
                 if wind is not None:
